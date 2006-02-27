@@ -5,7 +5,7 @@ use ExtUtils::MakeMaker;
 WriteMakefile(
     NAME              => 'HTML::TreeBuilder::XPath',
     VERSION_FROM      => 'lib/HTML/TreeBuilder/XPath.pm', # finds $VERSION
-    PREREQ_PM         => {}, # e.g., Module::Name => 1.1
+    PREREQ_PM         => { XML::XPathEngine => 0.03 }, # e.g., Module::Name => 1.1
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/HTML/TreeBuilder/XPath.pm', # retrieve abstract from module
        AUTHOR         => 'Michel Rodriguez <mrodrigu@localdomain>') : ()),

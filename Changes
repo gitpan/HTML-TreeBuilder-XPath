@@ -1,6 +1,11 @@
+$Id$
 Revision history for Perl extension HTML::TreeBuilder::XPath.
 
-0.01  Mon Oct 25 13:39:49 2004
+0.02 2006-02-27
+
+  - fixed dependency to XML::XPathEngine in the Makefile
+
+0.01 2006-02-15
 	- original version; created by h2xs 1.23 with options
 		-A -X -nHTML::TreeBuilder::XPath --use-new-tests --skip-exporter --skip-autoloader
 

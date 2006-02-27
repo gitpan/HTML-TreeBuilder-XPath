@@ -5,7 +5,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 package HTML::TreeBuilder::XPath;
 
@@ -35,8 +35,8 @@ sub cmp
 
     # easy cases
     return  0 if( $a == $b);    
-    return -1 if( $a->is_inside($b)); # a starts after b 
-    return  1 if( $b->is_inside($a)); # a starts before b
+    return 1 if( $a->is_inside($b)); # a starts after b 
+    return -1 if( $b->is_inside($a)); # a starts before b
 
     # lineage does not include the element itself
     my @a_pile= ($a, $a->lineage); 
