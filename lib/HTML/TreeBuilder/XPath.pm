@@ -5,7 +5,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 package HTML::TreeBuilder::XPath;
 
@@ -59,16 +59,16 @@ sub cmp
       }
 
     if( defined( $a_anc->{_rank}) && defined( $b_anc->{_rank}))
-      { return $a_anc->{_rank} cmp $b_anc->{_rank}; }
+      { return $a_anc->{_rank} <=> $b_anc->{_rank}; }
     else
       { warn "no rank found";
         # from there move left and right and figure out the order
         my( $a_prev, $a_next, $b_prev, $b_next)= ($a_anc, $a_anc, $b_anc, $b_anc);
         while()
           { $a_prev= $a_prev->getPreviousSibling || return -1;
-            return  1 if( $a_prev == $b_next);
+            return  1 if( $a_prev == $b_anc);
             $a_next= $a_next->getNextSibling     || return  1;
-            return -1 if( $a_next == $b_prev);
+            return -1 if( $a_next == $b_anc);
             $b_prev= $b_prev->getPreviousSibling || return  1;
             return -1 if( $b_prev == $a_next);
             $b_next= $b_next->getNextSibling     || return -1;

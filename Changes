@@ -1,6 +1,11 @@
 $Id$
 Revision history for Perl extension HTML::TreeBuilder::XPath.
 
+0.03 2006-04-20
+
+  - fixed bug that caused results not to be ordered properly when
+    there were more than 10 results (cf RT #18705) spotted by rnapier
+
 0.02 2006-02-27
 
   - fixed dependency to XML::XPathEngine in the Makefile
