@@ -3,7 +3,7 @@
 
 #########################
 
-use Test::More tests => 16;
+use Test::More tests => 17;
 BEGIN { use_ok('HTML::TreeBuilder::XPath') };
 
 #########################
@@ -16,6 +16,7 @@ my $doc='<html>
              and even <span id="foo" class="myspan">spans</span>, <span class="myspan" id="bar">several</span>,
              and that is <b>all</b> folks.</p>
              <!-- a commented line break --><br>
+             <blockquote id="bq" bgcolor="0">0</blockquote>
            </body>
          </html>
         ';
@@ -41,11 +42,15 @@ is( $html->findvalue( '//p[@id="toto"]/a[1]|//p[@id="toto"]/a[2]'), 'linksmore l
 is( $html->findvalue( '//@id[.="toto"]|//*[@id="bar"]|/html/body/h1|//@id[.="toto"]/../a[1]|//*[@id="foo"]'), 'Example headertotolinksspansseveral', 
                       'query on various types of nodes');
 
+
+is( $html->findvalue( './/*[@bgcolor="0"]'),'0', 'one child has a value of "0"'); 
+
 {
 my $p= $html->findnodes( '//p[@id="toto"]')->[0];
 is( $p->findvalue( './a'), 'linksmore links', 'query on siblings of an element');
 is( $p->findvalue( './a[1]|./a[2]'), 'linksmore links', 'query on siblings of an element (ordered)');
 is( $p->findvalue( './a[2]|./a[1]'), 'linksmore links', 'query on siblings of an element (not ordered)');
+
 }
 
 __END__

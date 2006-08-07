@@ -1,6 +1,11 @@
 $Id: /html-treebuilder-xpath/Changes 40 2006-05-15T07:42:34.182385Z mrodrigu  $
 Revision history for Perl extension HTML::TreeBuilder::XPath.
 
+0.06 2006-08-07
+
+  - fixed a bug that caused a crash when an element had a value of 0
+    patch by Martin Sarfy
+
 0.05 2006-05-17
 
   - added pod and pod coverage tests

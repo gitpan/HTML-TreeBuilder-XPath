@@ -5,7 +5,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 package HTML::TreeBuilder::XPath;
 
@@ -160,7 +160,7 @@ sub string_value
 # a new HTML::TreeBuilder::XPath::Text element if it is a plain string
 sub _child_as_object
   { my( $elt, $elt_or_text, $rank)= @_;
-    return undef unless( $elt_or_text);
+    return undef unless( defined $elt_or_text);
     if( ! ref $elt_or_text)
       { # $elt_or_text is a string, turn it into a TextNode object
         $elt_or_text= bless { _content => $elt_or_text, _parent => $elt, }, 
