@@ -5,7 +5,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 package HTML::TreeBuilder::XPath;
 
@@ -115,8 +115,8 @@ sub getParentNode
     return $elt->{_parent} || bless { _root => $elt }, 'HTML::TreeBuilder::XPath::Root';
   }
 sub getName             { return shift->tag;   }
-sub getNextSibling      { $_[0]->_child_as_object( scalar $_[0]->right, $_[0]->{_rank}+1); }
-sub getPreviousSibling  { $_[0]->_child_as_object( scalar $_[0]->left, $_[0]->{_rank}-1);  }
+sub getNextSibling      { $_[0]->_child_as_object( scalar $_[0]->right, ($_[0]->{_rank} || 0) + 1); }
+sub getPreviousSibling  { $_[0]->_child_as_object( scalar $_[0]->left,  ($_[0]->{_rank} || 0) - 1);  }
 sub isElementNode       { return ref $_[0] && ($_[0]->{_tag}!~ m{^~}) ? 1 : 0; }
 sub isCommentNode       { return ref $_[0] && ($_[0]->{_tag} eq '~comment') ? 1 : 0; }
 sub isisProcessingInstructionNode { return ref $_[0] && ($_[0]->{_tag} eq '~pi') ? 1 : 0; }
@@ -280,6 +280,7 @@ package HTML::TreeBuilder::XPath::Root;
 
 use base 'HTML::TreeBuilder::XPath::Node';
     
+sub getParentNode   { return (); }
 sub getChildNodes   { my @content= ( $_[0]->{_root}); return wantarray ? @content : \@content; }
 sub getAttributes   { return []        }
 sub isDocumentNode  { return 1         }
