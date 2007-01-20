@@ -5,7 +5,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 package HTML::TreeBuilder::XPath;
 
@@ -23,6 +23,8 @@ sub isPINode        { 0 }
 sub isCommentNode   { 0 }
 
 sub getChildNodes { return wantarray ? () : []; }
+sub getFirstChild { return undef; }
+sub getLastChild { return undef; }
 
 
 sub to_number { return XML::XPathEngine::Number->new( shift->getValue); }
@@ -115,11 +117,18 @@ sub getParentNode
     return $elt->{_parent} || bless { _root => $elt }, 'HTML::TreeBuilder::XPath::Root';
   }
 sub getName             { return shift->tag;   }
-sub getNextSibling      { $_[0]->_child_as_object( scalar $_[0]->right, ($_[0]->{_rank} || 0) + 1); }
-sub getPreviousSibling  { $_[0]->_child_as_object( scalar $_[0]->left,  ($_[0]->{_rank} || 0) - 1);  }
+sub getNextSibling      { my( $elt)= @_; 
+                          my $parent= $elt->{_parent} || return undef;
+                          return  $parent->_child_as_object( scalar $elt->right, ($elt->{_rank} || 0) + 1);
+                        }
+sub getPreviousSibling  { my( $elt)= @_; 
+                          my $parent= $elt->{_parent} || return undef;
+                          return undef unless $elt->{_rank};
+                          return  $parent->_child_as_object( scalar $elt->left, $elt->{_rank} - 1); 
+                        }
 sub isElementNode       { return ref $_[0] && ($_[0]->{_tag}!~ m{^~}) ? 1 : 0; }
 sub isCommentNode       { return ref $_[0] && ($_[0]->{_tag} eq '~comment') ? 1 : 0; }
-sub isisProcessingInstructionNode { return ref $_[0] && ($_[0]->{_tag} eq '~pi') ? 1 : 0; }
+sub isProcessingInstructionNode { return ref $_[0] && ($_[0]->{_tag} eq '~pi') ? 1 : 0; }
 sub isTextNode          { return ref $_[0] ? 0 : 1; }
 
 sub getValue 
@@ -133,6 +142,23 @@ sub getChildNodes
     my $rank=0;
     my @children= map { $parent->_child_as_object( $_, $rank++) } $parent->content_list;
     return wantarray ? @children : \@children;
+  }
+
+sub getFirstChild
+  { my $parent= shift;
+    my @content= $parent->content_list;
+    if( @content)
+      { return $parent->_child_as_object( $content[0], 0); }
+    else
+      { return undef; }
+  }
+sub getLastChild
+  { my $parent= shift;
+    my @content= $parent->content_list;
+    if( @content)
+      { return $parent->_child_as_object( $content[-1], $#content); }
+    else
+      { return undef; }
   }
 
 sub getAttributes
@@ -180,6 +206,7 @@ sub getParentNode { return shift->{_parent};    }
 sub getValue      { return shift->{_content};   }
 sub isTextNode    { return 1;                   }
 sub getAttributes { return wantarray ? () : []; }
+sub as_XML        { return shift->getValue;     }
 
 
 sub getPreviousSibling
@@ -206,7 +233,7 @@ sub getRootNode
 
 sub string_value { return shift->{_content}; }
 
-# added to provide element-like methods to attributes, for use by cmp
+# added to provide element-like methods to text nodes, for use by cmp
 sub lineage 
   { my( $node)= @_;
     my $parent= $node->{_parent};
