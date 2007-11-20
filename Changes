@@ -1,6 +1,17 @@
 $Id: /html-treebuilder-xpath/Changes 40 2006-05-15T07:42:34.182385Z mrodrigu  $
 Revision history for Perl extension HTML::TreeBuilder::XPath.
 
+-
+0.09
+
+  - added support for the id function, see RT #30792 
+    at https://rt.cpan.org/Ticket/Display.html?id=30792 bug reported, and
+    a fix proposed by tokuhirom 
+
+  - fixed a bug where the as_XML method on text nodes returned non escaped
+    text, spotted by Tatsuhiko Miyagawa
+    at the moment the output is quite ugly, as ugly as HTML::Element as_XML.
+
 0.08
 
   - fixed a bug that prevented the 'following' and 'preceding'

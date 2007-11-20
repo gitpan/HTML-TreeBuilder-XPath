@@ -1,11 +1,14 @@
 package HTML::TreeBuilder::XPath;
 
+
 use strict;
 use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.08';
+$VERSION = '0.09';
+
+my %ENT= ( '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', );
 
 package HTML::TreeBuilder::XPath;
 
@@ -26,6 +29,10 @@ sub getChildNodes { return wantarray ? () : []; }
 sub getFirstChild { return undef; }
 sub getLastChild { return undef; }
 
+sub getElementById 
+  { my ($self, $id) = @_;
+    return scalar $self->look_down( id => $id);
+  }
 
 sub to_number { return XML::XPathEngine::Number->new( shift->getValue); }
 
@@ -37,7 +44,7 @@ sub cmp
 
     # easy cases
     return  0 if( $a == $b);    
-    return 1 if( $a->is_inside($b)); # a starts after b 
+    return  1 if( $a->is_inside($b)); # a starts after b 
     return -1 if( $b->is_inside($a)); # a starts before b
 
     # lineage does not include the element itself
@@ -48,8 +55,8 @@ sub cmp
     unless( $a_pile[-1] == $b_pile[-1]) 
       { warn "2 nodes not in the same pile: ", ref( $a), " - ", ref( $b), "\n"; 
         print "a: ", $a->string_value, "\nb: ", $b->string_value, "\n";
+        return undef;
       }
-    return undef unless( $a_pile[-1] == $b_pile[-1]);
 
     # find the first non common ancestors (they are siblings)
     my $a_anc= pop @a_pile;
@@ -63,7 +70,7 @@ sub cmp
     if( defined( $a_anc->{_rank}) && defined( $b_anc->{_rank}))
       { return $a_anc->{_rank} <=> $b_anc->{_rank}; }
     else
-      { warn "no rank found";
+      {
         # from there move left and right and figure out the order
         my( $a_prev, $a_next, $b_prev, $b_next)= ($a_anc, $a_anc, $b_anc, $b_anc);
         while()
@@ -206,7 +213,19 @@ sub getParentNode { return shift->{_parent};    }
 sub getValue      { return shift->{_content};   }
 sub isTextNode    { return 1;                   }
 sub getAttributes { return wantarray ? () : []; }
-sub as_XML        { return shift->getValue;     }
+
+# extracted from _HTML::Element as_XML
+sub as_XML
+  { my( $node, $entities)= @_;
+    my $content= $node->{_content};
+    if( $node->{_parent} && $node->{_parent}->{_tag} eq 'script')
+      { $content=~ s{(&\w+;)}{HTML::Entities::decode($1)}eg; }
+    else
+      { HTML::Element::_xml_escape($content); }
+    return $content;
+  }
+
+
 
 
 sub getPreviousSibling
@@ -243,6 +262,12 @@ sub lineage
 sub is_inside
   { my( $text, $node)= @_;
     return $text->{_parent}->is_inside( $node);
+  }
+
+sub xml_escape
+  { my( $text)= @_;
+    $text=~ s{([&<>])}{$ENT{$1}}g;
+    return $text;
   }
 
 1;
@@ -392,7 +417,7 @@ L<XML::XPathEngine>
 
 =head1 AUTHOR
 
-Michel Rodriguez, E<lt>imirod@cpan.orgE<gt>
+Michel Rodriguez, E<lt>mirod@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 

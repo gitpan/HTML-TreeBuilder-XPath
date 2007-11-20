@@ -3,7 +3,7 @@
 
 #########################
 
-use Test::More tests => 17;
+use Test::More tests => 19;
 BEGIN { use_ok('HTML::TreeBuilder::XPath') };
 
 #########################
@@ -51,6 +51,8 @@ is( $p->findvalue( './a'), 'linksmore links', 'query on siblings of an element')
 is( $p->findvalue( './a[1]|./a[2]'), 'linksmore links', 'query on siblings of an element (ordered)');
 is( $p->findvalue( './a[2]|./a[1]'), 'linksmore links', 'query on siblings of an element (not ordered)');
 
+is( $html->findvalue('id("foo")'), 'spans', 'id function');
+is( $html->findvalue('id("foo")/@id'), 'foo', 'id function (attribute)');
 }
 
 __END__
