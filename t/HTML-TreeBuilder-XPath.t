@@ -3,7 +3,7 @@
 
 #########################
 
-use Test::More tests => 19;
+use Test::More tests => 29;
 BEGIN { use_ok('HTML::TreeBuilder::XPath') };
 
 #########################
@@ -36,6 +36,10 @@ is( $html->findvalue( '//*[@id="foo"]/@id|//*[@id="foo"]/@class'), 'myspanfoo', 
 is( $html->findvalue( '//*[@id="foo"]/@class|//*[@id="foo"]/@id'), 'myspanfoo', '2 atts on same element (unsorted)');
 
 is( $html->findvalue( '//b'), 'boldall', '2 texts');
+is( join( '|', $html->findvalues( '//b')), 'bold|all', '2 texts with findvalues');
+is( join( '|', $html->findnodes_as_strings( '//b')), 'bold|all', '2 texts with findnodes_as_strings');
+is( join( '|', $html->findvalues( '//a/@href')), 'http://foo.com/|/bar/', '2 texts with findvalues');
+is( join( '|', $html->findnodes_as_strings( '//a/@href')), 'http://foo.com/|/bar/', '2 texts with findnodes_as_strings');
 is( $html->findvalue( '//p[@id="toto"]/a'), 'linksmore links', '2 siblings');
 is( $html->findvalue( '//p[@id="toto"]/a[1]|//p[@id="toto"]/a[2]'), 'linksmore links', '2 siblings');
 
@@ -53,6 +57,19 @@ is( $p->findvalue( './a[2]|./a[1]'), 'linksmore links', 'query on siblings of an
 
 is( $html->findvalue('id("foo")'), 'spans', 'id function');
 is( $html->findvalue('id("foo")/@id'), 'foo', 'id function (attribute)');
+}
+
+
+{
+# test for root
+my ($fake_root)=$html->findnodes('/');
+ok( !$fake_root->getParentNode => "fake root does not have a parent");
+is( $fake_root->getRootNode, $fake_root, "fake root is its own root");
+ok( !@{$fake_root->getAttributes} => "fake root has no attributes");
+ok( !defined($fake_root->getName) => "fake root does not have a name");
+ok( !defined($fake_root->getNextSibling) => "fake root does not have a next sibling");
+ok( !defined($fake_root->getPreviousSibling) => "fake root does not have a prev sibling");
+
 }
 
 __END__

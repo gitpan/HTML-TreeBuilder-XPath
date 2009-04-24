@@ -1,12 +1,16 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         HTML-TreeBuilder-XPath
-version:      0.09
-version_from: lib/HTML/TreeBuilder/XPath.pm
-installdirs:  site
-requires:
+--- #YAML:1.0
+name:                HTML-TreeBuilder-XPath
+version:             0.10
+abstract:            add XPath support to HTML::TreeBuilder
+license:             perl
+author:              
+    - Michel Rodriguez <mrodrigu@localdomain>
+generated_by:        ExtUtils::MakeMaker version 6.42
+distribution_type:   module
+requires:     
     HTML::TreeBuilder:             0
-    XML::XPathEngine:              0.08
-
-distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30_01
+    List::Util:                    0
+    XML::XPathEngine:              0.12
+meta-spec:
+    url:     http://module-build.sourceforge.net/META-spec-v1.3.html
+    version: 1.3
