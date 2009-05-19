@@ -1,6 +1,12 @@
 $Id: /html-treebuilder-xpath/Changes 40 2006-05-15T07:42:34.182385Z mrodrigu  $
 Revision history for Perl extension HTML::TreeBuilder::XPath.
 
+version 0.11
+date:
+# minor bug fixes
+added: mention $tree->delete in docs to warn about memory leaks
+fix:   pod fix (https://rt.cpan.org/Ticket/Display.html?id=46203)
+
 version: 0.10
 date: 2008-02-11
 # minor feature addition

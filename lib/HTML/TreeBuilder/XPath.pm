@@ -7,7 +7,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.10';
+$VERSION = '0.11';
 
 my %CHAR2DEFAULT_ENT= ( '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;');
 my %NUM2DEFAULT_ENT= ( '38' => 'amp', '60' => 'lt', '62' => 'gt', '"' => '&quot;');
@@ -531,6 +531,7 @@ sub cmp { return $_[1]->isa( ' HTML::TreeBuilder::XPath::Root') ? 0 : 1; }
 1;
 
 __END__
+
 =head1 NAME
 
 HTML::TreeBuilder::XPath - add XPath support to HTML::TreeBuilder
@@ -545,6 +546,7 @@ HTML::TreeBuilder::XPath - add XPath support to HTML::TreeBuilder
 
   my $p= $html->findnodes( '//p[@id="toto"]')->[0];
   my $link_texts= $p->findvalue( './a'); # the texts of all a elements in $p
+  $tree->delete; # to avoid memory leaks, if you parse many HTML documents 
   
   
 =head1 DESCRIPTION
