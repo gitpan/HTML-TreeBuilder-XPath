@@ -8,7 +8,7 @@ use warnings;
 
 use vars qw($VERSION);
 
-$VERSION = '0.13';
+$VERSION = '0.14';
 
 my %CHAR2DEFAULT_ENT= ( '&' => '&amp;', '<' => '&lt;', '>' => '&gt;', '"' => '&quot;');
 my %NUM2DEFAULT_ENT= ( '38' => 'amp', '60' => 'lt', '62' => 'gt', '"' => '&quot;');
@@ -149,7 +149,7 @@ sub isTextNode          { return ref $_[0] ? 0 : 1; }
 
 sub getValue 
   { my $elt= shift;
-    if( $elt->isCommentNode) { return $elt->{_text}; }
+    if( $elt->isCommentNode) { return $elt->{text}; }
     return $elt->as_text;
   }
         
@@ -193,7 +193,7 @@ sub getAttributes
 sub to_number { return XML::XPathEngine::Number->new( $_[0]->as_text); }
 sub string_value 
   { my $elt= shift;
-    if( $elt->isCommentNode) { return $elt->{_text}; }
+    if( $elt->isCommentNode) { return $elt->{text}; }
     return $elt->as_text;
   };
 
@@ -630,13 +630,17 @@ L<HTML::TreeBuilder>
 
 L<XML::XPathEngine>
 
+=head1 REPOSITORY
+
+L<https://github.com/mirod/HTML--TreeBuilder--XPath>
+
 =head1 AUTHOR
 
 Michel Rodriguez, E<lt>mirod@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2006 by Michel Rodriguez
+Copyright (C) 2006-2011 by Michel Rodriguez
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself, either Perl version 5.8.4 or,
